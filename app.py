@@ -4,20 +4,34 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
+import gdown
 
 from main import highlight_differences, DistanceLayer
 
 app = Flask(__name__)
-CORS(app)  # allow React to talk to Flask
+CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ==============================
-# Load Model
+# MODEL DOWNLOAD (Google Drive)
 # ==============================
+MODEL_PATH = "image_comparison_model.keras"
+
+FILE_ID = "1uUuzbSWtKpFQwaWp9W1QnscZ_CjDaNri"
+
+if not os.path.exists(MODEL_PATH):
+    print("Downloading model from Google Drive...")
+    url = f"https://drive.google.com/uc?id={FILE_ID}"
+    gdown.download(url, MODEL_PATH, quiet=False)
+
+# ==============================
+# LOAD MODEL
+# ==============================
+print("Loading model...")
 model = tf.keras.models.load_model(
-    'image_comparison_model.keras',
+    MODEL_PATH,
     custom_objects={'DistanceLayer': DistanceLayer},
     compile=False
 )
@@ -28,24 +42,30 @@ model.compile(
     metrics=['accuracy']
 )
 
+print("Model loaded successfully.")
+
 # ==============================
-# Serve Uploaded Images
+# SERVE UPLOADED FILES
 # ==============================
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 # ==============================
-# Compare Route (API)
+# COMPARE ROUTE
 # ==============================
 @app.route('/compare', methods=['POST'])
 def compare():
     try:
-        # Get uploaded files
+        if 'original' not in request.files or 'edited' not in request.files:
+            return jsonify({
+                "success": False,
+                "error": "Both images are required"
+            })
+
         original = request.files['original']
         edited = request.files['edited']
 
-        # Save files
         original_path = os.path.join(UPLOAD_FOLDER, original.filename)
         edited_path = os.path.join(UPLOAD_FOLDER, edited.filename)
 
@@ -53,9 +73,9 @@ def compare():
         edited.save(edited_path)
 
         # ==============================
-        # Highlight Differences (OpenCV)
+        # Highlight Differences
         # ==============================
-        output_filename = 'output.jpg'
+        output_filename = f"output_{original.filename}"
         output_path = os.path.join(UPLOAD_FOLDER, output_filename)
 
         highlight_differences(original_path, edited_path, output_path)
@@ -77,9 +97,6 @@ def compare():
 
         verdict = "Edited" if similarity < 0.5 else "Original"
 
-        # ==============================
-        # Return JSON (for React)
-        # ==============================
         return jsonify({
             "success": True,
             "similarity": round(similarity_percent, 2),
@@ -93,9 +110,15 @@ def compare():
             "error": str(e)
         })
 
+# ==============================
+# HEALTH CHECK (for Render)
+# ==============================
+@app.route('/')
+def home():
+    return jsonify({"status": "Backend is running"})
 
 # ==============================
-# Run App
+# RUN APP
 # ==============================
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
