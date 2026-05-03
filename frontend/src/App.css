@@ -1,0 +1,99 @@
+/* Full screen gradient */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #6366f1, #3b82f6);
+  background-size: 400% 400%;
+  animation: gradient 12s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Layout */
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Title */
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+/* Glass Card */
+.card {
+  width: 320px;
+  padding: 30px;
+
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Upload styling */
+.upload {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 5px;
+}
+
+.upload input {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* Button */
+button {
+  margin-top: 10px;
+  padding: 12px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: white;
+  font-size: 16px;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Result */
+.result {
+  margin-top: 30px;
+  padding: 20px;
+
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+
+  background: rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.result img {
+  margin-top: 15px;
+  width: 300px;
+  border-radius: 10px;
+}

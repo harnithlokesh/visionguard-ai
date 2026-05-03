@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Tamper Detection</title>
+</head>
+<body>
+    <h2>Upload Images</h2>
+    <form action="/compare" method="post" enctype="multipart/form-data">
+        <label>Original Image:</label>
+        <input type="file" name="original" required><br><br>
+
+        <label>Edited Image:</label>
+        <input type="file" name="edited" required><br><br>
+
+        <button type="submit">Compare</button>
+    </form>
+</body>
+</html>

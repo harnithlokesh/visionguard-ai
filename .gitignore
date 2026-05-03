@@ -1,0 +1,47 @@
+# Dataset folders
+original/
+edited/
+
+# Generated outputs
+uploads/
+differences/
+
+# Model files
+*.keras
+*.h5
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Node
+frontend/node_modules/
+frontend/build/
+
+# Env
+.env
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model files (IMPORTANT)
+*.keras
+*.h5
+*.pt
+
+# Env
+.env
+
+# Uploads / generated files
+uploads/
+differences/
+
+# Node
+frontend/node_modules/
+frontend/build/
+
+# OS junk
+.DS_Store
+Thumbs.db
